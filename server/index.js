@@ -17,7 +17,7 @@ app.get('/', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    scrapper.scrapeProfile(req.body);
+    scrapper.getData(req.body);
     res.send('Success!');
 })
 
