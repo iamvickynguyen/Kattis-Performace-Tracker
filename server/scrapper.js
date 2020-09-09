@@ -55,7 +55,7 @@ async function scrapeProfile(page, address) {
         i += 1;
     }
 
-    return objects
+    return objects;
 }
 
 function getObjects(data, objects) {

@@ -17,8 +17,8 @@ app.get('/', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    scrapper.getData(req.body);
-    res.send('Success!');
+    const result = await scrapper.getData(req.body);
+    res.json({result});
 })
 
 app.listen(port, () => {
