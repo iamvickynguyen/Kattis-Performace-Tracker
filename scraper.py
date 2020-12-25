@@ -23,20 +23,11 @@ def scrape(username, token):
                 results = soup.find_all('table')
                 tuples = get_data(results[1])
 
-
-                # check if id exist
-                tobe_inserted_data = check_exist(c, conn, tuples)
-                print(tobe_inserted_data) # DEBUG
-
-                if len(tobe_inserted_data) == 0:
+                if len(tuples) <= 0:
                     break
 
-                c.executemany('INSERT INTO userprofile values (?,?,?,?,?,?)', tobe_inserted_data)
+                c.executemany('INSERT INTO userprofile values (?,?,?,?,?,?)', tuples)
                 conn.commit()
-
-                # if there is no new data, break
-                if len(tobe_inserted_data) < len(tuples):
-                    break
 
                 pagenumber += 1
             
@@ -63,10 +54,10 @@ def get_data(table):
     return data
 
 # if some data already exist, return list of new data
-def check_exist(c, conn, tuples):
-    args = map(lambda x: x[0], tuples)
+# def check_exist(c, conn, tuples):
+#     args = map(lambda x: x[0], tuples)
     
-    c.execute('SELECT id FROM userprofile WHERE id IN ({})'.format(','.join(['?']*len(list(args)))))
-    ids = set(c.fetchall())
-    conn.commit()
-    return list(filter(lambda x: x[0] not in ids, tuples))
+#     c.execute('SELECT id FROM userprofile WHERE id IN ({})'.format(','.join(['?']*len(list(args)))))
+#     ids = set(c.fetchall())
+#     conn.commit()
+#     return list(filter(lambda x: x[0] not in ids, tuples))
