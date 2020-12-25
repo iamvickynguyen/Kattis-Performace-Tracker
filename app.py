@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, render_template, request, url_for
 from scraper import scrape
+import getter
 app = Flask(__name__)
 conn = sqlite3.connect('kattistracker.db')
 c = conn.cursor()
@@ -17,8 +18,9 @@ conn.close()
 @app.route('/', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        scrape(request.form['user-input'], request.form['token-input'])
-        return render_template('stats.html', username = 'jkljaslf', token = 'jfaijf')
+        # scrape(request.form['user-input'], request.form['token-input'])
+        problems = getter.problem_titles()
+        return render_template('stats.html', username = problems, token = 'jfaijf')
     else:
         return render_template('login.html')
 
