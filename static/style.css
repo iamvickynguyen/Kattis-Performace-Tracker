@@ -1,0 +1,74 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+main {
+    padding-top: 5rem;
+    display: flex;
+    flex-direction: column;
+    height: 30vh;
+}
+
+.month-container {
+    height: 3vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.month-box {
+    height: 1rem;
+    color: turquoise;
+}
+
+.table {
+    padding: 0rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.week-boxes {
+    height: 25vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+
+.day,
+.week-text {
+    height: 1rem;
+    width: 1rem;
+    background: lightblue;
+
+}
+
+.week-text {
+    margin-right: 1rem;
+    margin-bottom: 0.1rem;
+    background: none;
+}
+
+.day:hover {
+    background: lightseagreen;
+}
+
+.day-content {
+    opacity: 0;
+}
+
+.day-content.active {
+    padding: 2rem;
+    border-radius: 1rem;
+    min-width: 10rem;
+    background: lightgoldenrodyellow;
+    color: darkgray;
+    position: absolute;
+    opacity: 1;
+}
