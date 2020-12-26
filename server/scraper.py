@@ -26,7 +26,7 @@ def scrape(username, token):
                 if len(tuples) <= 0:
                     break
 
-                c.executemany('INSERT INTO userprofile values (?,?,?,?,?,?)', tuples)
+                c.executemany('INSERT INTO userprofile values (?,?,?,?,?,?,?)', tuples)
                 conn.commit()
 
                 pagenumber += 1
@@ -43,9 +43,13 @@ def get_data(table):
     rows = body.find_all('tr')
     for row in rows:
         cols = row.find_all('td')
+        datetime = cols[1].get_text().split()
+        date = datetime[0] if len(datetime) > 1 else None
+        time = datetime[0] if len(datetime) < 2 else datetime[1]
         data.append((
             cols[0].get_text(),
-            cols[1].get_text().strip(),
+            date,
+            time,
             cols[2].get_text(),
             cols[3].get_text(),
             unicodedata.normalize('NFKD', cols[4].get_text()),
