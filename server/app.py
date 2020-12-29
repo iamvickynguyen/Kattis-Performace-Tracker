@@ -29,32 +29,37 @@ def login():
         return render_template('login.html')
 
 @app.route('/api/statuscountgroupbydate', methods=['GET'])
-def api_problemtitles():
+def api_statuscountgroupbydate():
     conn = sqlite3.connect('kattistracker.db')
     conn.row_factory = dict_factory
     c = conn.cursor()
     results = c.execute('''
-        with ac as (select problem, date from userprofile where status like 'Accepted%' COLLATE NOCASE and date is not null group by problem),
-        wa as (select problem, date from userprofile where status like 'Wrong Answer%' COLLATE NOCASE and date is not null group by problem),
-        tle as (select problem, date from userprofile where status like 'Time Limit Exceeded%' COLLATE NOCASE and date is not null group by problem),
-        countac as (select count(problem) as ac_count, date from ac group by date),
-        countwa as (select count(problem) as wa_count, date from wa group by date),
-        counttle as (select count(problem) as tle_count, date from tle group by date),
+        with ac as (select count(status) as ac_count, date from userprofile where status LIKE 'Accepted%' COLLATE NOCASE and date is not null group by date),
+        wa as (select count(status) as wa_count, date from userprofile where status LIKE 'Wrong Answer%' COLLATE NOCASE and date is not null group by date),
+        tle as (select count(status) as tle_count, date from userprofile where status LIKE 'Time Limit Exceeded%' COLLATE NOCASE and date is not null group by date),
         ac_wa as
-        (select ac_count, wa_count, countac.date
-            from countac left join countwa on countac.date = countwa.date
+        (select ac_count, wa_count, ac.date
+            from ac left join wa on ac.date = wa.date
             union
-            select ac_count, wa_count, countwa.date
-            from countwa left join countac on countac.date = countwa.date
-            where countac.date is null
+            select ac_count, wa_count, wa.date
+            from wa left join ac on ac.date = wa.date
+            where ac.date is null
         )
         select ac_count, wa_count, tle_count, ac_wa.date
-            from ac_wa left join counttle on ac_wa.date = counttle.date
+            from ac_wa left join tle on ac_wa.date = tle.date
             union
-            select ac_count, wa_count, tle_count, counttle.date
-            from counttle left join ac_wa on ac_wa.date = counttle.date
+            select ac_count, wa_count, tle_count, tle.date
+            from tle left join ac_wa on ac_wa.date = tle.date
             where ac_wa.date is null;
             ''').fetchall()
+    return jsonify({'results': results})
+
+@app.route('/api/details/<date>', methods=['GET'])
+def api_details(date):
+    conn = sqlite3.connect('kattistracker.db')
+    conn.row_factory = dict_factory
+    c = conn.cursor()
+    results = c.execute('''select * from userprofile where date='%s';''' %date).fetchall()
     return jsonify({'results': results})
 
 if __name__ == "__main__":

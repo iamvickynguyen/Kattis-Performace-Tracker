@@ -233,9 +233,18 @@ fetch('/api/statuscountgroupbydate')
         calendar.onDateClick(function(event, date){
             const dateToString = jsCalendar.tools.dateToString(date, 'yyyy-MM-DD');
             if (dateDict.hasOwnProperty(dateToString)) {
-                modalHeader.innerHTML = dateToString;
-                modalBody.innerHTML = dateDict[dateToString];
-                modalBtn.click();
+                fetch(`/api/details/${dateToString}`)
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    let problemList = data.results.map(function(p) {
+                        return JSON.stringify(p);
+                    }).join('\r\n');
+
+                    modalHeader.innerHTML = dateToString;
+                    modalBody.innerHTML = problemList;
+                    modalBtn.click();
+                })
+                .catch(function(error) { console.log(error); })
             }
         });
     })
