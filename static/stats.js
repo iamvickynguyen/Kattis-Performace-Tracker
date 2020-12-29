@@ -172,6 +172,10 @@ jsCalendar.prototype.addDateEventListener = function (event, handler, useCapture
 var userCalendar = document.getElementById('user-calendar');
 var calendar = new jsCalendar('#user-calendar');
 
+let modalBtn = document.getElementById("modalBtn");
+let modalHeader = document.getElementById("exampleModalLongTitle");
+let modalBody = document.getElementById("modal-body");
+
 // Create a tooltip div
 var tooltip = document.createElement('div');
 tooltip.style.width = '200px';
@@ -204,6 +208,10 @@ fetch('/api/statuscountgroupbydate')
         });
         console.log(statuscountgroupbydate);
 
+        dates = statuscountgroupbydate.map(function(obj) { return new Date(obj.date).toISOString().slice(0,10).split('-').reverse().join('/'); });
+        console.log(dates);
+        calendar.select(dates);
+
         // Attach events to show/hide tooltip
         calendar.addDateEventListener('mousemove', function(event, date) {
             tooltip.style.top = Math.round(event.pageY) + 'px';
@@ -220,5 +228,15 @@ fetch('/api/statuscountgroupbydate')
         calendar.addDateEventListener('mouseout', function() {
             tooltip.style.display = 'none';
         }, false);
+
+        // Display info on card
+        calendar.onDateClick(function(event, date){
+            const dateToString = jsCalendar.tools.dateToString(date, 'yyyy-MM-DD');
+            if (dateDict.hasOwnProperty(dateToString)) {
+                modalHeader.innerHTML = dateToString;
+                modalBody.innerHTML = dateDict[dateToString];
+                modalBtn.click();
+            }
+        });
     })
     .catch(function(error) { console.log(error); })
