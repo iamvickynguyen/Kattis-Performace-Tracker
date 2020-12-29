@@ -1,8 +1,3 @@
-fetch('/api/statuscountgroupbydate')
-    .then(response => response.json())
-    .then(data => { console.log(data); })
-    .catch(error => { console.log(error); })
-
 const table = document.querySelector(".table");
 const months = document.querySelector(".month-container");
 let day = 0;
@@ -144,10 +139,86 @@ function getDate(year, num, isLeap) {
             }
         })
     }
-    const date = new Date(Date.UTC(year, month, day));
+    const date = new Date(Date.UTC(year, month, day)).toISOString().slice(0,10);
     return date;
 
 }
 
 drawTable(2020);
 generateMonths();
+
+// https://github.com/GramThanos/jsCalendar/issues/16
+// Add Support for Custom Event Listeners
+jsCalendar.prototype.addDateEventListener = function (event, handler, useCapture) {
+	if (typeof useCapture === 'undefined') useCapture = false;
+	// Save instance
+	var that = this;
+	// Loop through day elements
+	var i, j;
+	for (i = 0; i < 6; i++) {
+		for (j = 0; j < 7; j++) {
+			// Attach event
+			this._elements.bodyCols[i * 7 + j].addEventListener(event, (function(index){
+				return function (event) {
+					// On fire, call handler
+					handler(event, that._active[index]);
+				};
+			})(i * 7 + j), useCapture);
+		}
+	}
+};
+
+// --------- CALENDAR -------------
+var userCalendar = document.getElementById('user-calendar');
+var calendar = new jsCalendar('#user-calendar');
+
+// Create a tooltip div
+var tooltip = document.createElement('div');
+tooltip.style.width = '200px';
+tooltip.style.marginLeft = '10px';
+tooltip.style.height = '30px';
+tooltip.style.marginTop = '-40px';
+tooltip.style.lineHeight = '30px';
+tooltip.style.display = 'none';
+tooltip.style.position = 'absolute';
+tooltip.style.top = '0';
+tooltip.style.bottom = '0';
+tooltip.style.textAlign = 'center';
+tooltip.style.background = 'rgba(0, 0, 0, 0.75)';
+tooltip.style.color = '#ffffff';
+tooltip.style.border = '1px solid #000';
+tooltip.style.borderRadius = '5px';
+tooltip.innerHTML = '123';
+document.body.appendChild(tooltip);
+
+fetch('/api/statuscountgroupbydate')
+    .then(function(response) { return response.json(); })
+    .then(function(data) { 
+        const statuscountgroupbydate = data.results;
+        let dateDict = {};
+        statuscountgroupbydate.forEach(e => {
+            let s = e.ac_count != null ? "AC: " + e.ac_count + " " : "";
+            s +=  e.wa_count != null ? "WA: " + e.wa_count + " " : "";
+            s +=  e.tle_count != null ? "TLE: " + e.tle_count + " " : "";
+            dateDict[e.date] = s.trim(); 
+        });
+        console.log(statuscountgroupbydate);
+
+        // Attach events to show/hide tooltip
+        calendar.addDateEventListener('mousemove', function(event, date) {
+            tooltip.style.top = Math.round(event.pageY) + 'px';
+            tooltip.style.left = Math.round(event.pageX) + 'px';
+            const dateToString = jsCalendar.tools.dateToString(date, 'yyyy-MM-DD');
+            if (dateDict.hasOwnProperty(dateToString)) {
+                tooltip.innerHTML = dateDict[dateToString];
+                tooltip.style.display = 'block';
+            } else {
+                tooltip.style.display = 'none';
+            }
+            
+        }, false);
+        calendar.addDateEventListener('mouseout', function() {
+            tooltip.style.display = 'none';
+        }, false);
+    })
+    .catch(function(error) { console.log(error); })
