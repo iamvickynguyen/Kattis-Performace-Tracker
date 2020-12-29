@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, request, url_for, jsonify
+from flask import Flask, render_template, request, url_for, jsonify, redirect
 from scraper import scrape
 app = Flask(__name__, template_folder = "../templates", static_folder="../static")
 conn = sqlite3.connect('kattistracker.db')

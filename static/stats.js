@@ -147,6 +147,21 @@ function getDate(year, num, isLeap) {
 drawTable(2020);
 generateMonths();
 
+function createDetailList(l) {
+    const ul = document.createElement("ul");
+    ul.setAttribute("id", "myUl");
+    document.body.appendChild(ul);
+  
+    l.forEach(function(item) {
+        var li = document.createElement("li");
+        var t = document.createTextNode(`${item.problem} ${item.time} ${item.status} ${item.cpu} ${item.lang}`);
+        li.appendChild(t);
+        document.getElementById("myUl").appendChild(li);
+    });
+
+    return ul;
+}
+
 // https://github.com/GramThanos/jsCalendar/issues/16
 // Add Support for Custom Event Listeners
 jsCalendar.prototype.addDateEventListener = function (event, handler, useCapture) {
@@ -206,10 +221,8 @@ fetch('/api/statuscountgroupbydate')
             s +=  e.tle_count != null ? "TLE: " + e.tle_count + " " : "";
             dateDict[e.date] = s.trim(); 
         });
-        console.log(statuscountgroupbydate);
 
         dates = statuscountgroupbydate.map(function(obj) { return new Date(obj.date).toISOString().slice(0,10).split('-').reverse().join('/'); });
-        console.log(dates);
         calendar.select(dates);
 
         // Attach events to show/hide tooltip
@@ -236,12 +249,9 @@ fetch('/api/statuscountgroupbydate')
                 fetch(`/api/details/${dateToString}`)
                 .then(function(response) { return response.json(); })
                 .then(function(data) {
-                    let problemList = data.results.map(function(p) {
-                        return JSON.stringify(p);
-                    }).join('\r\n');
-
+                    while (modalBody.firstChild) { modalBody.removeChild(modalBody.firstChild); }
                     modalHeader.innerHTML = dateToString;
-                    modalBody.innerHTML = problemList;
+                    modalBody.appendChild(createDetailList(data.results));
                     modalBtn.click();
                 })
                 .catch(function(error) { console.log(error); })
