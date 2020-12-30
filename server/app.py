@@ -43,14 +43,22 @@ def api_statuscountgroupbydate():
             union
             select ac_count, wa_count, wa.date
             from wa left join ac on ac.date = wa.date
-            where ac.date is null
-        )
-        select ac_count, wa_count, tle_count, ac_wa.date
+            where ac.date is null),
+        ac_wa_tle as
+        (select ac_count, wa_count, tle_count, ac_wa.date
             from ac_wa left join tle on ac_wa.date = tle.date
             union
             select ac_count, wa_count, tle_count, tle.date
             from tle left join ac_wa on ac_wa.date = tle.date
-            where ac_wa.date is null;
+            where ac_wa.date is null),
+        others as
+        (select count(status) as others_count, date from userprofile where date not in (select date from ac_wa_tle) and date is not null group by date)
+        select ac_count, wa_count, tle_count, others_count, ac_wa_tle.date
+            from ac_wa_tle left join others on ac_wa_tle.date = others.date
+            union
+            select ac_count, wa_count, tle_count, others_count, others.date
+            from others left join ac_wa_tle on ac_wa_tle.date = others.date
+            where ac_wa_tle.date is null;
             ''').fetchall()
     return jsonify({'results': results})
 
@@ -59,7 +67,7 @@ def api_details(date):
     conn = sqlite3.connect('kattistracker.db')
     conn.row_factory = dict_factory
     c = conn.cursor()
-    results = c.execute('''select * from userprofile where date='%s';''' %date).fetchall()
+    results = c.execute('''select * from userprofile where date='%s' order by time;''' %date).fetchall()
     return jsonify({'results': results})
 
 if __name__ == "__main__":

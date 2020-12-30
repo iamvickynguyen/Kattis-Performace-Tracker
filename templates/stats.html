@@ -1,14 +1,10 @@
 {% extends 'base.html' %}
 {% block head %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='style.css') }}">
 {% endblock %}
 
 {% block body %}
     <main>
-        <div class="month-container"></div>
-        <div class="table"></div>
-
         <div id="user-calendar"></div>
 
         <!-- Modal -->
@@ -25,11 +21,13 @@
                 <div class="modal-body" id="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>  
     </main>
 
-    <script src="https://unpkg.com/simple-jscalendar@1.4.3/source/jsCalendar.min.js" integrity="sha384-JqNLUzAxpw7zEu6rKS/TNPZ5ayCWPUY601zaig7cUEVfL+pBoLcDiIEkWHjl07Ot" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://unpkg.com/simple-jscalendar@1.4.3/source/jsCalendar.min.css" integrity="sha384-+OB2CadpqXIt7AheMhNaVI99xKH8j8b+bHC8P5m2tkpFopGBklD3IRvYjPekeWIJ" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="static/calendarize/html/style.css">
+    <script type="text/javascript" src="static/calendarize/html/calendarize.js"></script>
+    
     <script type="text/javascript" src="{{url_for('static', filename='stats.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"
         integrity="sha512-YSdqvJoZr83hj76AIVdOcvLWYMWzy6sJyIMic2aQz5kh2bPTd9dzY3NtdeEAzPp/PhgZqr4aJObB3ym/vsItMg=="
