@@ -47,24 +47,6 @@ html, body {
 	background: rgb(207, 206, 206);
 }
 
-.day[tooltip]:hover::after {
-    content: attr(tooltip);
-    display: block;
-    position: fixed;
-	transform: translateX(250px);
-	transform: translateY(-850px);
-	z-index:10;
-	width: 150px;
-	height: 50px;
-	margin-top: -40px;
-	line-height: 30px;
-	text-align: center;
-	background: rgba(0, 0, 0, 0.75);
-	color: #ffffff;
-	border: 1px solid #000;
-	border-radius: 5px;
-}
-
 .day, .dummy-day {
 	height: 40px;
 	line-height: 40px;

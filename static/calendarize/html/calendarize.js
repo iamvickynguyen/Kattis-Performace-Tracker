@@ -226,7 +226,7 @@ function Calendarize() {
 					$dayNode.style.backgroundColor = opts.color || "fff";
 
 					if (opts.tooltip && Object.keys(opts.tooltip).length > 0)
-						$dayNode.setAttribute("tooltip", opts.tooltip[dateFormat]);
+						$dayNode.setAttribute("title", opts.tooltip[dateFormat]);
 				}
 				
 				$monthNode.appendChild($dayNode);
