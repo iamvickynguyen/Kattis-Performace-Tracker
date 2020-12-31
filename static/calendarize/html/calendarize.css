@@ -1,7 +1,7 @@
 .month {
 	width: 300px;
 	padding: 20px;
-	background: #FED187;
+	background: var(--calendar-background);
 	position: relative;
 	overflow: hidden;
 	float: left;
@@ -13,8 +13,8 @@
 	text-align: center;
 	margin: -20px -20px 10px -20px;
 	padding: 10px 0;
-	background: #1d130b;
-	color: #FFF;
+	background: var(--calendar-month-background);
+	color: var(--calendar-month);
 }
 
 .day, .dow, .dummy-day {
@@ -32,14 +32,15 @@
 
 .day {
 	cursor: pointer;
-	color: #3C2718;
+	color: var(--calendar-day);
 }
+
 .day.weekend {
 	/* background: rgb(245, 171, 53); */
 }
 
 .day:hover {
-	background: #E6AA60 !important;;
+	background: var(--calendar-day-hover) !important;
 }
 
 .day, .dummy-day {
@@ -49,6 +50,6 @@
 }
 
 .dummy-day {
-	color: #d18222;
+	color: var(--calendar-dummyday);
 }
 

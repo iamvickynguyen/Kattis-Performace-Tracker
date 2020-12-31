@@ -1,4 +1,15 @@
+:root {
+    --main-background: #EAB996;
+    --calendar-background: #FCFDFB;
+    --calendar-day: #020102;
+    --calendar-day-hover: #F1ECE4;
+    --calendar-dummyday: #cea99d;
+    --calendar-day-selected: #ABDF9D;
+    --calendar-month:  #FCFDFB;
+    --calendar-month-background: #020102;
+}
+
 html, body {
-	background: #DCDDE5;
+	background: var(--main-background);
 	font-family: sans-serif;
 }
