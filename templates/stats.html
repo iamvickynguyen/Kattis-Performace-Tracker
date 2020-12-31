@@ -8,17 +8,30 @@
     <div class="container" id="user-calendar"></div>
     
     <!-- Modal -->
-    <button type="button" id="modalBtn" data-toggle="modal" data-target="#exampleModalCenter" style="display: none;"></button>
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" >
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <button type="button" id="modalBtn" data-toggle="modal" data-target="#detailDateModalCenter" style="display: none;"></button>
+    <div class="modal fade" id="detailDateModalCenter" tabindex="-1" role="dialog" >
+        <div class="modal-dialog modal-dialog-centered modal-lrg" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                <h5 class="modal-title" id="detailDateModal"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-body" id="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Problem</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">CPU</th>
+                            <th scope="col">Language</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalTableRows"></tbody>
+                </table>
+            </div>
             </div>
         </div>
     </div>

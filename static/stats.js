@@ -1,25 +1,30 @@
 let modalBtn = document.getElementById("modalBtn");
-let modalHeader = document.getElementById("exampleModalLongTitle");
-let modalBody = document.getElementById("modal-body");
+let modalHeader = document.getElementById("detailDateModal");
+let modalTableRows = document.getElementById("modalTableRows");
 
 // Calendarize lib
 var calendar = document.getElementById("user-calendar");
 var currentYear = new Date().getFullYear();
 var calendarize = new Calendarize();
 
-function createDetailList(l) {
-    const ul = document.createElement("ul");
-    ul.setAttribute("id", "myUl");
-    document.body.appendChild(ul);
+function clearChildren(el) {
+    while (el.firstChild) { el.removeChild(el.firstChild); }
+}
 
-    l.forEach(function(item) {
-        var li = document.createElement("li");
-        var t = document.createTextNode(`${item.problem} ${item.time} ${item.status} ${item.cpu} ${item.lang}`);
-        li.appendChild(t);
-        document.getElementById("myUl").appendChild(li);
-    });
-
-    return ul;
+function createDetailRows(el, data) {
+    for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+        const r = document.createElement("tr");
+        r.setAttribute("id", `detailRow${i}`);
+        el.appendChild(r);
+        var texts = [item.problem, item.time, item.status, item.cpu, item.lang];
+        texts.forEach(function(txt) {
+            var td = document.createElement("td");
+            var tdtxt = document.createTextNode(txt);
+            td.appendChild(tdtxt);
+            document.getElementById(`detailRow${i}`).appendChild(td);
+        });
+    };
 }
 
 var getDetailData = function(date) {
@@ -27,9 +32,9 @@ var getDetailData = function(date) {
     fetch(`/api/details/${queryDate}`)
     .then(function(response) { return response.json(); })
     .then(function(data) {
-        while (modalBody.firstChild) { modalBody.removeChild(modalBody.firstChild); }
+        clearChildren(modalTableRows);
+        createDetailRows(modalTableRows, data.results);
         modalHeader.innerHTML = queryDate;
-        modalBody.appendChild(createDetailList(data.results));
         modalBtn.click();
     })
     .catch(function(error) { console.log(error); })

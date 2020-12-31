@@ -206,7 +206,7 @@ function Calendarize() {
 				var twodigitdate = ("0" + (d + 1)).slice(-2);
 				var twodigitmonth = ("0" + (monthNum + 1)).slice(-2);
 				var dateFormat = `${year}-${twodigitmonth}-${twodigitdate}`;
-				if (opts.selectedDates.hasOwnProperty(dateFormat)) {
+				if (opts.selectedDates && opts.selectedDates.hasOwnProperty(dateFormat)) {
 					if (opts.clickHandler && !$dayNode.classList.contains('dummy-day')) {
 						function handleEvent(e) {
 							e = e || window.event;
