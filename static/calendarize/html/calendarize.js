@@ -1,8 +1,10 @@
 /* Author: Jim Camut */
 
 function Calendarize() {
-	var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-	var dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+	// var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	// var dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+	var monthNames = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+	var dayNames = ["S", "M", "T", "W", "T", "F", "S"];
 
 	return {
 
@@ -122,7 +124,7 @@ function Calendarize() {
 			var daysPrevMonth = _this.getDaysInMonth(prevM.getMonth(), prevM.getFullYear());
 			var daysNextMonth = _this.getDaysInMonth(nextM.getMonth(), nextM.getFullYear());
 			var $monthNode = document.createElement('div');
-			var $titleNode = document.createElement('h5');
+			var $titleNode = document.createElement('h6');
 			var skipLength = daysInMonth[0].getDay();
 			var preLength = daysInMonth.length + skipLength;
 			var postLength = function() {
@@ -141,7 +143,7 @@ function Calendarize() {
 
 			// Add a Title to the month
 			if (opts.showMonth) {
-				$titleNode.innerText = monthNames[monthNum] + (opts.showYear ? " " + year : '');
+				$titleNode.innerText =  (opts.showYear ? year : '') + "/" + monthNames[monthNum];
 				$monthNode.appendChild($titleNode);
 			}
 

@@ -11,7 +11,7 @@ function createDetailList(l) {
     const ul = document.createElement("ul");
     ul.setAttribute("id", "myUl");
     document.body.appendChild(ul);
-  
+
     l.forEach(function(item) {
         var li = document.createElement("li");
         var t = document.createTextNode(`${item.problem} ${item.time} ${item.status} ${item.cpu} ${item.lang}`);

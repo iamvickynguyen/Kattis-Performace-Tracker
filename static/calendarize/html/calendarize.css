@@ -1,20 +1,21 @@
 .month {
-	width: 300px;
-	padding: 20px;
+	width: 200px;
+	padding: 5px;
 	background: var(--calendar-background);
 	position: relative;
 	overflow: hidden;
 	float: left;
-	margin: 20px;
-	height: 350px;
+	margin: 11px;
+	height: 210px;
 }
 
-.month h5 {
+.month h6 {
 	text-align: center;
 	margin: -20px -20px 10px -20px;
-	padding: 10px 0;
+	padding: 20px 0px 5px 0px;
 	background: var(--calendar-month-background);
 	color: var(--calendar-month);
+	font-size: 13.5px;
 }
 
 .day, .dow, .dummy-day {
@@ -23,6 +24,7 @@
 	float: left;
 	text-align: center;
 	margin-right: 1.5%;
+	font-size: 13.5px;
 }
 
 .dow {
@@ -33,6 +35,7 @@
 .day {
 	cursor: pointer;
 	color: var(--calendar-day);
+	font-size: 13.5px;
 }
 
 .day.weekend {
@@ -44,12 +47,13 @@
 }
 
 .day, .dummy-day {
-	height: 40px;
-	line-height: 40px;
+	height: 20px;
+	line-height: 20px;
 	margin-bottom: 1.5%;
 }
 
 .dummy-day {
 	color: var(--calendar-dummyday);
+	font-size: 13.5px;
 }
 
