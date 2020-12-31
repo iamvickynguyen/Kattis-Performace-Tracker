@@ -6,52 +6,41 @@
 {% block body %}
 
     <div class="container" id="user-calendar"></div>
-    
+
     <!-- Modal -->
     <button type="button" id="modalBtn" data-toggle="modal" data-target="#detailDateModalCenter" style="display: none;"></button>
     <div class="modal fade" id="detailDateModalCenter" tabindex="-1" role="dialog" >
         <div class="modal-dialog modal-dialog-centered modal-lrg" role="document">
             <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="detailDateModal"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modal-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Problem</th>
-                            <th scope="col">Time</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">CPU</th>
-                            <th scope="col">Language</th>
-                        </tr>
-                    </thead>
-                    <tbody id="modalTableRows"></tbody>
-                </table>
-            </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailDateModal"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Problem</th>
+                                <th scope="col">Time</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">CPU</th>
+                                <th scope="col">Language</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalTableRows"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-
     <link rel="stylesheet" href="static/calendarize/html/calendarize.css">
     <script type="text/javascript" src="static/calendarize/html/calendarize.js"></script>
-    
     <script type="text/javascript" src="{{url_for('static', filename='stats.js')}}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"
-        integrity="sha512-YSdqvJoZr83hj76AIVdOcvLWYMWzy6sJyIMic2aQz5kh2bPTd9dzY3NtdeEAzPp/PhgZqr4aJObB3ym/vsItMg=="
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 {% endblock %}
