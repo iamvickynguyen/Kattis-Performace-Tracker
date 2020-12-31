@@ -55,6 +55,6 @@ fetch('/api/statuscountgroupbydate')
             dateDict[e.date] = s.trim(); 
         });
 
-        calendarize.buildMonthsWithStartAndEndDates(calendar, {'color': 'orange', 'selectedDates': selectedDates, 'tooltip': dateDict}, minDate, maxDate, getDetailData);
+        calendarize.buildMonthsWithStartAndEndDates(calendar, {'color': 'rgb(241, 90, 34)', 'selectedDates': selectedDates, 'tooltip': dateDict}, minDate, maxDate, getDetailData);
     })
     .catch(function(error) { console.log(error); })

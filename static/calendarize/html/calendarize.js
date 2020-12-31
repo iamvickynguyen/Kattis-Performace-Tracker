@@ -122,7 +122,7 @@ function Calendarize() {
 			var daysPrevMonth = _this.getDaysInMonth(prevM.getMonth(), prevM.getFullYear());
 			var daysNextMonth = _this.getDaysInMonth(nextM.getMonth(), nextM.getFullYear());
 			var $monthNode = document.createElement('div');
-			var $titleNode = document.createElement('h4');
+			var $titleNode = document.createElement('h5');
 			var skipLength = daysInMonth[0].getDay();
 			var preLength = daysInMonth.length + skipLength;
 			var postLength = function() {
