@@ -19,7 +19,6 @@ html, body {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8vh;
 }
 
 .modal-lrg {
@@ -31,13 +30,22 @@ html, body {
     overflow-y: auto;
 }
 
-.bottom-control {
-    top: 80vh;
-    position:fixed;
-    width:50%;
+.carousel-top-control {
+    top: 35px;
+    position: fixed;
+    width: 15%;
+    height: 15px;
 }
 
-.year-caption {
-    color: var(--calendar-month-background);
-    top: 0;
+.carousel-control-left {
+    margin-left: 25%;
+}
+
+.carousel-control-right {
+    margin-right: 25%;
+}
+
+.calendar-title {
+    text-align: center;
+    padding: 20px;
 }

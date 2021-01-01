@@ -18,17 +18,16 @@ function createCarouselSlide(el, year) {
     calendarElement.setAttribute("id", `user-calendar-${year}`);
     calendarElement.setAttribute("class", "container");
 
-    // caption
-    const calendarYearDiv = document.createElement("h2");
+    // title
+    const calendarTitleDiv = document.createElement("div");
+    calendarTitleDiv.setAttribute("class", "calendar-title");
+    const calendarYearHeader = document.createElement("h1");
     const calendarYearCaption = document.createTextNode(`${year}`);
-    calendarYearDiv.appendChild(calendarYearCaption);
+    calendarYearHeader.appendChild(calendarYearCaption);
+    calendarTitleDiv.appendChild(calendarYearHeader)
 
-    const yearCaptionContainer = document.createElement("div");
-    yearCaptionContainer.setAttribute("class", "carousel-caption year-caption");
-    yearCaptionContainer.appendChild(calendarYearDiv);
-
+    carouselItem.appendChild(calendarTitleDiv);
     carouselItem.appendChild(calendarElement);
-    carouselItem.appendChild(yearCaptionContainer);
     el.appendChild(carouselItem);
 }
 
