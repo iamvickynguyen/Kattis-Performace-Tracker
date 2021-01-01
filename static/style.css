@@ -12,12 +12,14 @@
 html, body {
 	background: var(--main-background);
     font-family: sans-serif;
+    height: 100vh;
 }
 
 .container {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    margin-top: 8vh;
 }
 
 .modal-lrg {
@@ -27,4 +29,15 @@ html, body {
 .modal-body {
     max-height: 80vh;
     overflow-y: auto;
+}
+
+.bottom-control {
+    top: 80vh;
+    position:fixed;
+    width:50%;
+}
+
+.year-caption {
+    color: var(--calendar-month-background);
+    top: 0;
 }

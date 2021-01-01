@@ -1,14 +1,35 @@
 let modalBtn = document.getElementById("modalBtn");
 let modalHeader = document.getElementById("detailDateModal");
 let modalTableRows = document.getElementById("modalTableRows");
-
-// Calendarize lib
-var calendar = document.getElementById("user-calendar");
-var currentYear = new Date().getFullYear();
-var calendarize = new Calendarize();
+let carouselContainer = document.getElementById("carousel-container");
 
 function clearChildren(el) {
     while (el.firstChild) { el.removeChild(el.firstChild); }
+}
+
+function createCarouselSlide(el, year) {
+    // calendar
+    const carouselItem = document.createElement("div");
+    carouselItem.setAttribute("class", "carousel-item");
+    carouselItem.setAttribute("id", `carousel-item-${year}`);
+    el.appendChild(carouselItem);
+
+    const calendarElement = document.createElement("div");
+    calendarElement.setAttribute("id", `user-calendar-${year}`);
+    calendarElement.setAttribute("class", "container");
+
+    // caption
+    const calendarYearDiv = document.createElement("h2");
+    const calendarYearCaption = document.createTextNode(`${year}`);
+    calendarYearDiv.appendChild(calendarYearCaption);
+
+    const yearCaptionContainer = document.createElement("div");
+    yearCaptionContainer.setAttribute("class", "carousel-caption year-caption");
+    yearCaptionContainer.appendChild(calendarYearDiv);
+
+    carouselItem.appendChild(calendarElement);
+    carouselItem.appendChild(yearCaptionContainer);
+    el.appendChild(carouselItem);
 }
 
 function createDetailRows(el, data) {
@@ -43,23 +64,41 @@ var getDetailData = function(date) {
 fetch('/api/statuscountgroupbydate')
     .then(function(response) { return response.json(); })
     .then(function(data) { 
-        const statuscountgroupbydate = data.results;
-        let selectedDates = {};
-        statuscountgroupbydate.forEach(function(d) { selectedDates[d.date] = true; });
+        years = {};
+        data.results.forEach(function(item) { years[item.date.substring(0, 4)] = true; });
+        //clearChildren(carouselContainer);
 
-        const allDates = statuscountgroupbydate.map(function(d) { return new Date(d.date); });
-        const maxDate = new Date(Math.max.apply(null, allDates));
-        const minDate = new Date(Math.min.apply(null, allDates));
+        for (const y in years) {
+            createCarouselSlide(carouselContainer, y);
 
-        let dateDict = {};
-        statuscountgroupbydate.forEach(function(e) {
-            let s = e.ac_count != null ? "AC: " + e.ac_count + " " : "";
-            s +=  e.wa_count != null ? "WA: " + e.wa_count + " " : "";
-            s +=  e.tle_count != null ? "TLE: " + e.tle_count + " " : "";
-            s +=  e.others_count != null ? "Others: " + e.others_count + " " : "";
-            dateDict[e.date] = s.trim(); 
-        });
+            let calendarize = new Calendarize();
 
-        calendarize.buildMonthsWithStartAndEndDates(calendar, {'color': '#FFA384', 'selectedDates': selectedDates, 'tooltip': dateDict}, minDate, maxDate, getDetailData);
+            const statuscountgroupbydate = data.results.filter(function(item) { return item.date.substring(0, 4) == y; } );
+            let selectedDates = {};
+            statuscountgroupbydate.forEach(function(d) { selectedDates[d.date] = true; });
+    
+            const allDates = statuscountgroupbydate.map(function(d) { return new Date(d.date); });
+            const maxDate = new Date(Math.max.apply(null, allDates));
+            const minDate = new Date(Math.min.apply(null, allDates));
+    
+            let dateDict = {};
+            statuscountgroupbydate.forEach(function(e) {
+                let s = e.ac_count != null ? "AC: " + e.ac_count + " " : "";
+                s +=  e.wa_count != null ? "WA: " + e.wa_count + " " : "";
+                s +=  e.tle_count != null ? "TLE: " + e.tle_count + " " : "";
+                s +=  e.others_count != null ? "Others: " + e.others_count + " " : "";
+                dateDict[e.date] = s.trim(); 
+            });
+    
+            let calendar = document.getElementById(`user-calendar-${y}`);
+            calendarize.buildMonthsWithStartAndEndDates(calendar, {'color': '#FFA384', 'selectedDates': selectedDates, 'tooltip': dateDict}, minDate, maxDate, getDetailData);
+        }
+
+        // set current year active
+        let yearArr = [];
+        for (const y in years) { yearArr.push(y); }
+        let curYear = yearArr.reduce(function(a, b) { return Math.max(a, b); });
+        let curCarousel = document.getElementById(`carousel-item-${curYear}`);
+        curCarousel.classList.add("active");
     })
     .catch(function(error) { console.log(error); })
