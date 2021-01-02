@@ -23,7 +23,7 @@ def dict_factory(cursor, row):
 @app.route('/', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        # scrape(request.form['user-input'], request.form['token-input'])
+        scrape(request.form['user-input'], request.form['token-input'])
         return render_template('stats.html')
     else:
         return render_template('login.html')
