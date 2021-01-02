@@ -16,6 +16,7 @@ def scrape(username, token):
     with requests.session() as s:
         try:
             c.execute('DELETE FROM userprofile WHERE date IS NULL;')
+            conn.commit()
             status = s.post(url, login_args)
             pagenumber = 0
             endscrapping = False
