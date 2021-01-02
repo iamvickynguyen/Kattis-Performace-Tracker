@@ -15,8 +15,11 @@ def scrape(username, token):
     print('SCRAPING...')
     with requests.session() as s:
         try:
+            c.execute('DELETE FROM userprofile WHERE date IS NULL;')
+            conn.commit()
             status = s.post(url, login_args)
             pagenumber = 0
+            endscrapping = False
             while True:
                 page = s.get('https://open.kattis.com/users/{}?page={}'.format(username, pagenumber))
                 soup = BeautifulSoup(page.content, 'html.parser')
@@ -26,15 +29,27 @@ def scrape(username, token):
                 if len(tuples) <= 0:
                     break
 
-                c.executemany('INSERT INTO userprofile values (?,?,?,?,?,?,?)', tuples)
-                conn.commit()
+                # insert new data
+                newtuples = []
+                for item in tuples:
+                    result = c.execute('''select * from userprofile where id='%s';''' %item[0]).fetchone()
+                    if result is not None:
+                        endscrapping = True
+                        break
+                    newtuples.append(item)
+
+                c.executemany('INSERT INTO userprofile values (?,?,?,?,?,?,?)', newtuples)
+
+                if endscrapping:
+                    break
 
                 pagenumber += 1
-            
+
+            conn.commit()
             conn.close()
+
         except Exception as e:
-            print('Error!!!')
-            print(e)
+            print('Error!!!', e)
             return
 
 def get_data(table):
@@ -56,12 +71,3 @@ def get_data(table):
             cols[5].get_text()
         ))
     return data
-
-# if some data already exist, return list of new data
-# def check_exist(c, conn, tuples):
-#     args = map(lambda x: x[0], tuples)
-    
-#     c.execute('SELECT id FROM userprofile WHERE id IN ({})'.format(','.join(['?']*len(list(args)))))
-#     ids = set(c.fetchall())
-#     conn.commit()
-#     return list(filter(lambda x: x[0] not in ids, tuples))
