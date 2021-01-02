@@ -15,7 +15,7 @@ def scrape(username, token):
     print('SCRAPING...')
     with requests.session() as s:
         try:
-            # c.execute('DELETE FROM userprofile WHERE date IS NULL;')
+            c.execute('DELETE FROM userprofile WHERE date IS NULL;')
             status = s.post(url, login_args)
             pagenumber = 0
             endscrapping = False
