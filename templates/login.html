@@ -1,14 +1,19 @@
 {% extends 'base.html' %}
 {% block head %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='login.css') }}">
 {% endblock %}
 
 {% block body %}
-<h3>https://open.kattis.com/download/kattisrc</h3>
-<div class="form">
-    <form action="/" method="POST">
-        <input name="user-input" type="text" id="content" placeholder="username" required/>
-        <input name="token-input" type="text" id="content" placeholder="token" required/>
-        <input type="submit" value="Submit" />
-    </form>
-</div>
+<form action="/" method="POST">
+    <p class="center">Please login to this <a href="https://open.kattis.com/download/kattisrc" target="_blank">kattisrc site</a> and input user name and token</p>
+    <p>
+        <label for="inputUsername">User Name</label>
+        <input name="user-input" type="text" id="inputUsername" required/>
+    </p>
+    <p>
+        <label for="inputToken">Token</label>
+        <input name="token-input" type="text" id="inputToken" required/>
+    </p>
+    <input class="btn btn-primary" type="submit" value="Submit" />
+</form>
 {% endblock %}
