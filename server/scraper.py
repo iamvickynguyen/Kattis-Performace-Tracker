@@ -12,7 +12,7 @@ def scrape(username, token):
     conn = sqlite3.connect('kattistracker.db')
     c = conn.cursor()
 
-    print('SCRAPING...')
+    print('Collecting data...')
     with requests.session() as s:
         try:
             c.execute('DELETE FROM userprofile WHERE date IS NULL;')
