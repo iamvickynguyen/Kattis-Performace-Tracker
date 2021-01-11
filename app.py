@@ -55,13 +55,17 @@ def login():
             f = open("userinfo.txt","w")
             f.close()
 
-        return render_template('stats.html')
-
+        return redirect(url_for('user'))
+        
     else:
         if os.stat("userinfo.txt").st_size == 0:
             return render_template('login.html', username = '', token = '', input_error = False)  
         with open('userinfo.txt','r') as f:
             return render_template('login.html', username = f.readline(), token = f.readline(), input_error = False)
+
+@app.route('/user')
+def user():
+    return render_template('stats.html')
 
 @app.route('/api/statuscountgroupbydate', methods=['GET'])
 def api_statuscountgroupbydate():
