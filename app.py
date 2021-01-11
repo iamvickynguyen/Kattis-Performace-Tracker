@@ -55,7 +55,7 @@ def login():
             f = open("userinfo.txt","w")
             f.close()
 
-        return redirect(url_for('user'))
+        return redirect(url_for('user', username = username))
         
     else:
         if os.stat("userinfo.txt").st_size == 0:
@@ -63,9 +63,9 @@ def login():
         with open('userinfo.txt','r') as f:
             return render_template('login.html', username = f.readline(), token = f.readline(), input_error = False)
 
-@app.route('/user')
-def user():
-    return render_template('stats.html')
+@app.route('/<username>')
+def user(username):
+    return render_template('stats.html', username = username)
 
 @app.route('/api/statuscountgroupbydate', methods=['GET'])
 def api_statuscountgroupbydate():
