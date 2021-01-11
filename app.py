@@ -1,7 +1,8 @@
 import sqlite3
+import os
 from flask import Flask, render_template, request, url_for, jsonify, redirect
-from scraper import scrape
-app = Flask(__name__, template_folder = "../templates", static_folder="../static")
+from scraper import scrape, delete_data
+app = Flask(__name__)
 conn = sqlite3.connect('kattistracker.db')
 c = conn.cursor()
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='userprofile' ''')
@@ -20,13 +21,47 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
+def store_userinfo(username, token):     
+    # new user
+    if os.stat("userinfo.txt").st_size == 0:
+        with open('userinfo.txt','w') as f:
+            f.writelines([username + '\n', token])
+        delete_data()
+
+    # check if the user changes
+    else:
+        cur_username, cur_token = "", ""
+        with open('userinfo.txt','r') as f:       
+            cur_username, cur_token = f.readline().strip(), f.readline().strip()
+        if username != cur_username or token != cur_token:
+            with open('userinfo.txt','w') as f:
+                f.writelines([username + '\n', token])      
+            delete_data()
+
+
 @app.route('/', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        scrape(request.form['user-input'], request.form['token-input'])
+        username, token, checked = request.form['user-input'], request.form['token-input'], 'remember' in request.form and request.form['remember'] == 'on'     
+        status = scrape(username, token)
+
+        if status != 200:
+            return render_template('login.html', username = username, token = token, input_error = True)
+        
+        # store user info for the next time
+        if checked:
+            store_userinfo(username, token)
+        else:
+            f = open("userinfo.txt","w")
+            f.close()
+
         return render_template('stats.html')
+
     else:
-        return render_template('login.html')
+        if os.stat("userinfo.txt").st_size == 0:
+            return render_template('login.html', username = '', token = '', input_error = False)  
+        with open('userinfo.txt','r') as f:
+            return render_template('login.html', username = f.readline(), token = f.readline(), input_error = False)
 
 @app.route('/api/statuscountgroupbydate', methods=['GET'])
 def api_statuscountgroupbydate():

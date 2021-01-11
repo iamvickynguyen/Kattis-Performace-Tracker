@@ -18,26 +18,27 @@ p {
     position: relative;
 }
 
-label {
+.InputLabel {
     display: block;
     font-size: 1.6em;
     margin: 0 0 .5em;
     color: #333;
 }
-input {
+.userInput {
     display: block;
     box-sizing: border-box;
     width: 100%;
     outline: none;
 }
 
-input[type="text"]:focus {
-    background: #fff;
+.errorInput {
+    background: #ffbdb6;
 }
 
 .loginBtn {
     display: block;
     margin: 0 auto;
+    margin-top: 15px;
     font-size: 1.6em;
 }
 

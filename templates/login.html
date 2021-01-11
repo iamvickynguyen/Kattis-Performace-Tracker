@@ -6,23 +6,46 @@
 {% block body %}
 <form action="/" method="POST" id="loginForm">
     <p class="center">Please login to this <a href="https://open.kattis.com/download/kattisrc" target="_blank">kattisrc site</a> and input user name and token</p>
-    <p>
-        <label for="inputUsername">User Name</label>
-        <input name="user-input" type="text" id="inputUsername" required/>
-    </p>
-    <p>
-        <label for="inputToken">Token</label>
-        <input name="token-input" type="text" id="inputToken" required/>
-    </p>
-    <button class="btn btn-primary loginBtn" id="submitBtn" type="submit" form="loginForm" value="Submit" onclick="submit()">Submit</button>
+    {% if not input_error %}
+        <p>
+            <label for="inputUsername" class="InputLabel">User Name</label>
+            <input class="userInput" name="user-input" type="text" id="inputUsername" value="{{ username }}" required/>
+        </p>
+        <p>
+            <label for="inputToken" class="InputLabel">Token</label>
+            <input class="userInput" name="token-input" type="text" id="inputToken" value="{{ token }}" required/>
+        </p>
+    {% else %}
+        <p>
+            <label for="inputUsername" class="InputLabel">User Name</label>
+            <input class="userInput errorInput" name="user-input" type="text" id="inputUsername" value="{{ username }}" required/>
+        </p>
+        <p>
+            <label for="inputToken" class="InputLabel">Token</label>
+            <input class="userInput errorInput" name="token-input" type="text" id="inputToken" value="{{ token }}" required/>
+        </p>
+
+        <script>
+            window.addEventListener('load', function(event) {
+                alert('Please check your input!');
+            });
+        </script>
+    {% endif %}
+
+    <label for="remember">
+        <input type="checkbox" id="remember" name="remember" checked> Remember me (collecting data will be done faster next time)
+    </label>
+
+    <button class="btn btn-primary loginBtn" id="submitBtn" onclick="submitForm()">Submit</button>
     <button class="btn btn-primary loginBtn" id="loadingBtn" style="display: none;"><i class="fa fa-spinner fa-spin"></i> Collecting data...</button>
 </form>
 
 <script>
-    function submit() {
+    function submitForm() {
         var username = document.getElementById('inputUsername');
         var token = document.getElementById('inputToken');
         if (username.value != "" && token.value != "") {
+            document.getElementById('loginForm').submit();
             document.getElementById('submitBtn').style.display = 'none';
             var loadingBtn = document.getElementById('loadingBtn');
             loadingBtn.style.display = '';

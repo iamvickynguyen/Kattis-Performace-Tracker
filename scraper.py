@@ -11,13 +11,18 @@ def scrape(username, token):
 
     conn = sqlite3.connect('kattistracker.db')
     c = conn.cursor()
-
+    
     print('Collecting data...')
     with requests.session() as s:
         try:
             c.execute('DELETE FROM userprofile WHERE date IS NULL;')
             conn.commit()
             status = s.post(url, login_args)
+
+            # validate
+            if status.status_code != 200:
+                return status.status_code
+
             pagenumber = 0
             endscrapping = False
             while True:
@@ -47,10 +52,11 @@ def scrape(username, token):
 
             conn.commit()
             conn.close()
+            return 200
 
         except Exception as e:
             print('Error!!!', e)
-            return
+            return 500
 
 def get_data(table):
     data = []
@@ -71,3 +77,9 @@ def get_data(table):
             cols[5].get_text()
         ))
     return data
+
+def delete_data():
+    conn = sqlite3.connect('kattistracker.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM userprofile;')
+    conn.commit()
