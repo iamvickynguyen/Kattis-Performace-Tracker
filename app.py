@@ -1,7 +1,7 @@
 import sqlite3
 import os
 from flask import Flask, render_template, request, url_for, jsonify, redirect
-from scraper import scrape, delete_data
+from collector import collect, delete_data
 app = Flask(__name__)
 conn = sqlite3.connect('kattistracker.db')
 c = conn.cursor()
@@ -10,7 +10,7 @@ c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name=
 #if the count is 1, then table exists
 if c.fetchone()[0]!=1 :
     c.execute('''CREATE TABLE IF NOT EXISTS userprofile
-        (id text, date text, time text, problem text, status text, cpu real, lang text)''')
+        (id text, user text, date text, time text, problem text, status text, cpu real, lang text)''')
 		
 conn.commit()
 conn.close()
@@ -43,7 +43,7 @@ def store_userinfo(username, token):
 def login():
     if request.method == 'POST':
         username, token, checked = request.form['user-input'], request.form['token-input'], 'remember' in request.form and request.form['remember'] == 'on'     
-        status = scrape(username, token)
+        status = collect(username, token)
 
         if status != 200:
             return render_template('login.html', username = username, token = token, input_error = True)
@@ -67,15 +67,16 @@ def login():
 def user(username):
     return render_template('stats.html', username = username)
 
-@app.route('/api/statuscountgroupbydate', methods=['GET'])
+@app.route('/api/statuscountgroupbydate', methods=['GET','POST'])
 def api_statuscountgroupbydate():
     conn = sqlite3.connect('kattistracker.db')
     conn.row_factory = dict_factory
     c = conn.cursor()
-    results = c.execute('''
-        with ac as (select count(status) as ac_count, date from userprofile where status LIKE 'Accepted%' COLLATE NOCASE and date is not null group by date),
-        wa as (select count(status) as wa_count, date from userprofile where status LIKE 'Wrong Answer%' COLLATE NOCASE and date is not null group by date),
-        tle as (select count(status) as tle_count, date from userprofile where status LIKE 'Time Limit Exceeded%' COLLATE NOCASE and date is not null group by date),
+    username = request.args.get('user')
+    query = '''with usertable as (select * from userprofile where user='{0}'),
+        ac as (select count(status) as ac_count, date from usertable where status LIKE 'Accepted%' COLLATE NOCASE and date is not null group by date),
+        wa as (select count(status) as wa_count, date from usertable where status LIKE 'Wrong Answer%' COLLATE NOCASE and date is not null group by date),
+        tle as (select count(status) as tle_count, date from usertable where status LIKE 'Time Limit Exceeded%' COLLATE NOCASE and date is not null group by date),
         ac_wa as
         (select ac_count, wa_count, ac.date
             from ac left join wa on ac.date = wa.date
@@ -91,22 +92,23 @@ def api_statuscountgroupbydate():
             from tle left join ac_wa on ac_wa.date = tle.date
             where ac_wa.date is null),
         others as
-        (select count(status) as others_count, date from userprofile where date not in (select date from ac_wa_tle) and date is not null group by date)
+        (select count(status) as others_count, date from usertable where date not in (select date from ac_wa_tle) and date is not null group by date)
         select ac_count, wa_count, tle_count, others_count, ac_wa_tle.date
             from ac_wa_tle left join others on ac_wa_tle.date = others.date
             union
             select ac_count, wa_count, tle_count, others_count, others.date
             from others left join ac_wa_tle on ac_wa_tle.date = others.date
-            where ac_wa_tle.date is null;
-            ''').fetchall()
+            where ac_wa_tle.date is null;'''.format(username)
+
+    results = c.execute(query).fetchall()
     return jsonify({'results': results})
 
-@app.route('/api/details/<date>', methods=['GET'])
-def api_details(date):
+@app.route('/api/details', methods=['GET'])
+def api_details():
     conn = sqlite3.connect('kattistracker.db')
     conn.row_factory = dict_factory
     c = conn.cursor()
-    results = c.execute('''select * from userprofile where date='%s' order by time;''' %date).fetchall()
+    results = c.execute('''select * from userprofile where user='%s' and date='%s' order by time;''' %(request.args.get('user'), request.args.get('date'))).fetchall()
     return jsonify({'results': results})
 
 if __name__ == "__main__":

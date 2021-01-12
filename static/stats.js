@@ -2,6 +2,7 @@ let modalBtn = document.getElementById("modalBtn");
 let modalHeader = document.getElementById("detailDateModal");
 let modalTableRows = document.getElementById("modalTableRows");
 let carouselContainer = document.getElementById("carousel-container");
+const username = new URL(window.location.href).pathname.split('/')[1];
 
 function clearChildren(el) {
     while (el.firstChild) { el.removeChild(el.firstChild); }
@@ -49,7 +50,7 @@ function createDetailRows(el, data) {
 
 var getDetailData = function(date) {
     let queryDate = new Date(date.toString()).toISOString().slice(0,10)
-    fetch(`/api/details/${queryDate}`)
+    fetch(`/api/details?user=${username}&date=${queryDate}`)
     .then(function(response) { return response.json(); })
     .then(function(data) {
         clearChildren(modalTableRows);
@@ -60,7 +61,7 @@ var getDetailData = function(date) {
     .catch(function(error) { console.log(error); })
 }
 
-fetch('/api/statuscountgroupbydate')
+fetch(`/api/statuscountgroupbydate?user=${username}`)
     .then(function(response) { return response.json(); })
     .then(function(data) { 
         years = {};

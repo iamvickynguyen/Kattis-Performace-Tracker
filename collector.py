@@ -5,7 +5,7 @@ import bs4
 from requests import Request, Session
 from bs4 import BeautifulSoup
 
-def scrape(username, token):
+def collect(username, token):
     url = 'https://open.kattis.com/login'
     login_args = {'user': username, 'script': 'true', 'token':token}
 
@@ -29,7 +29,7 @@ def scrape(username, token):
                 page = s.get('https://open.kattis.com/users/{}?page={}'.format(username, pagenumber))
                 soup = BeautifulSoup(page.content, 'html.parser')
                 results = soup.find_all('table')
-                tuples = get_data(results[1])
+                tuples = get_data(results[1], username)
 
                 if len(tuples) <= 0:
                     break
@@ -43,7 +43,7 @@ def scrape(username, token):
                         break
                     newtuples.append(item)
 
-                c.executemany('INSERT INTO userprofile values (?,?,?,?,?,?,?)', newtuples)
+                c.executemany('INSERT INTO userprofile(id, user, date, time, problem, status, cpu, lang) values (?,?,?,?,?,?,?,?)', newtuples)
 
                 if endscrapping:
                     break
@@ -58,7 +58,7 @@ def scrape(username, token):
             print('Error!!!', e)
             return 500
 
-def get_data(table):
+def get_data(table, username):
     data = []
     body = table.find('tbody')
     rows = body.find_all('tr')
@@ -69,6 +69,7 @@ def get_data(table):
         time = datetime[0] if len(datetime) < 2 else datetime[1]
         data.append((
             cols[0].get_text(),
+            username,
             date,
             time,
             cols[2].get_text(),
