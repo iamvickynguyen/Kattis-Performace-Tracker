@@ -1,8 +1,10 @@
 import sqlite3
 import os
 from flask import Flask, render_template, request, url_for, jsonify, redirect
-from collector import collect, delete_data
+from collector import validate_account, collect, delete_data
 app = Flask(__name__)
+
+# data table
 conn = sqlite3.connect('kattistracker.db')
 c = conn.cursor()
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='userprofile' ''')
@@ -11,7 +13,17 @@ c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name=
 if c.fetchone()[0]!=1 :
     c.execute('''CREATE TABLE IF NOT EXISTS userprofile
         (id text, user text, date text, time text, problem text, status text, cpu real, lang text)''')
-		
+conn.commit()
+conn.close()
+
+# users table
+conn = sqlite3.connect('users.db')
+c = conn.cursor()
+c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='accounts';''')
+
+#if the count is 1, then table exists
+if c.fetchone()[0]!=1 :
+    c.execute('''CREATE TABLE IF NOT EXISTS accounts (username text primary key, token text unique);''')
 conn.commit()
 conn.close()
 
@@ -22,46 +34,42 @@ def dict_factory(cursor, row):
     return d
 
 def store_userinfo(username, token):     
-    # new user
-    if os.stat("userinfo.txt").st_size == 0:
-        with open('userinfo.txt','w') as f:
-            f.writelines([username + '\n', token])
-        delete_data()
-
-    # check if the user changes
-    else:
-        cur_username, cur_token = "", ""
-        with open('userinfo.txt','r') as f:       
-            cur_username, cur_token = f.readline().strip(), f.readline().strip()
-        if username != cur_username or token != cur_token:
-            with open('userinfo.txt','w') as f:
-                f.writelines([username + '\n', token])      
-            delete_data()
-
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    results = c.execute('''select username from accounts where username='%s';''' % username).fetchone()
+    if not results:
+        c.execute('''insert into accounts(username, token) values('%s', '%s');''' % (username, token))
+        conn.commit()
+    conn.close()
 
 @app.route('/', methods=['POST', 'GET'])
 def login():
+    usernames = get_usernames()
     if request.method == 'POST':
-        username, token, checked = request.form['user-input'], request.form['token-input'], 'remember' in request.form and request.form['remember'] == 'on'     
-        status = collect(username, token)
+        username = request.form.get('accountOptions')
+        userinfo = get_userinfo(username)
+        status = collect(userinfo['username'], userinfo['token'])
 
         if status != 200:
-            return render_template('login.html', username = username, token = token, input_error = True)
-        
-        # store user info for the next time
-        if checked:
-            store_userinfo(username, token)
-        else:
-            f = open("userinfo.txt","w")
-            f.close()
-
+            return render_template('login.html', usernames = usernames, input_error = True)
         return redirect(url_for('user', username = username))
-        
-    else:
-        if os.stat("userinfo.txt").st_size == 0:
-            return render_template('login.html', username = '', token = '', input_error = False)  
-        with open('userinfo.txt','r') as f:
-            return render_template('login.html', username = f.readline(), token = f.readline(), input_error = False)
+
+    return render_template('login.html', input_error = False, usernames = usernames)
+
+# NOTE: not many accounts so rendering the whole page is fine. TODO: just update the user dropdown menu
+@app.route('/account', methods=['POST', 'GET'])
+def account():
+    if request.method == 'POST':
+        usernames = get_usernames()
+        username, token = request.form['user-input'], request.form['token-input']
+        status = validate_account(username, token)
+
+        if status != 200:
+            return render_template('login.html', usernames = usernames, input_error = True)
+
+        store_userinfo(username, token)
+        usernames = get_usernames()
+        return render_template('login.html', usernames = usernames, input_error = False)
 
 @app.route('/<username>')
 def user(username):
@@ -110,6 +118,18 @@ def api_details():
     c = conn.cursor()
     results = c.execute('''select * from userprofile where user='%s' and date='%s' order by time;''' %(request.args.get('user'), request.args.get('date'))).fetchall()
     return jsonify({'results': results})
+
+def get_userinfo(username):
+    conn = sqlite3.connect('users.db')
+    conn.row_factory = dict_factory
+    c = conn.cursor()
+    return c.execute('''select * from accounts where username='%s';''' %username).fetchone()
+
+def get_usernames():
+    conn = sqlite3.connect('users.db')
+    conn.row_factory = dict_factory
+    c = conn.cursor()
+    return list(map(lambda x: x['username'], c.execute('''select username from accounts;''').fetchall()))
 
 if __name__ == "__main__":
     app.run()

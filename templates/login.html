@@ -5,24 +5,37 @@
 
 {% block body %}
 <form action="/" method="POST" id="loginForm">
+        <p>
+            <label for="accounts" class="InputLabel">Log in with</label>
+            <select class="form-control" name="accountOptions" id="accounts">
+                {%for name in usernames %} 
+                    <option value="{{ name }}">{{ name }}</option>
+                {%endfor%}
+            </select>
+        </p>
+    <button class="btn btn-primary loginBtn" id="submitBtn" onclick="submitForm()">Submit</button>
+    <button class="btn btn-primary loginBtn" id="loadingBtn" style="display: none;"><i class="fa fa-spinner fa-spin"></i> Collecting data...</button>
+</form>
+
+<form action="/account" method="POST" id="accountForm">
     <p class="center">Please login to this <a href="https://open.kattis.com/download/kattisrc" target="_blank">kattisrc site</a> and input user name and token</p>
     {% if not input_error %}
         <p>
             <label for="inputUsername" class="InputLabel">User Name</label>
-            <input class="userInput" name="user-input" type="text" id="inputUsername" value="{{ username }}" required/>
+            <input class="userInput" name="user-input" type="text" id="inputUsername" required/>
         </p>
         <p>
             <label for="inputToken" class="InputLabel">Token</label>
-            <input class="userInput" name="token-input" type="text" id="inputToken" value="{{ token }}" required/>
+            <input class="userInput" name="token-input" type="text" id="inputToken" required/>
         </p>
     {% else %}
         <p>
             <label for="inputUsername" class="InputLabel">User Name</label>
-            <input class="userInput errorInput" name="user-input" type="text" id="inputUsername" value="{{ username }}" required/>
+            <input class="userInput errorInput" name="user-input" type="text" id="inputUsername" required/>
         </p>
         <p>
             <label for="inputToken" class="InputLabel">Token</label>
-            <input class="userInput errorInput" name="token-input" type="text" id="inputToken" value="{{ token }}" required/>
+            <input class="userInput errorInput" name="token-input" type="text" id="inputToken" required/>
         </p>
 
         <script>
@@ -32,22 +45,30 @@
         </script>
     {% endif %}
 
-    <label for="remember"><input type="checkbox" id="remember" name="remember" checked> Remember me</label>
-
-    <button class="btn btn-primary loginBtn" id="submitBtn" onclick="submitForm()">Submit</button>
-    <button class="btn btn-primary loginBtn" id="loadingBtn" style="display: none;"><i class="fa fa-spinner fa-spin"></i> Collecting data...</button>
+    <button class="btn btn-success loginBtn" id="addAccountBtn" onclick="addAccount()">Add Account</button>
+    <button class="btn btn-success loginBtn" id="checkingBtn" style="display: none;"><i class="fa fa-spinner fa-spin"></i> Checking...</button>
 </form>
 
 <script>
     function submitForm() {
+        document.getElementById('loginForm').submit();
+        document.getElementById('submitBtn').style.display = 'none';
+        var loadingBtn = document.getElementById('loadingBtn');
+        loadingBtn.style.display = '';
+        loadingBtn.disabled = true;
+        username.readOnly = true;
+        token.readOnly = true;
+    }
+
+    function addAccount() {
         var username = document.getElementById('inputUsername');
         var token = document.getElementById('inputToken');
         if (username.value != "" && token.value != "") {
-            document.getElementById('loginForm').submit();
-            document.getElementById('submitBtn').style.display = 'none';
-            var loadingBtn = document.getElementById('loadingBtn');
-            loadingBtn.style.display = '';
-            loadingBtn.disabled = true;
+            document.getElementById('accountForm').submit();
+            document.getElementById('addAccountBtn').style.display = 'none';
+            var checkingBtn = document.getElementById('checkingBtn');
+            checkingBtn.style.display = '';
+            checkingBtn.disabled = true;
             username.readOnly = true;
             token.readOnly = true;
         }

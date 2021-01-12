@@ -5,6 +5,19 @@ import bs4
 from requests import Request, Session
 from bs4 import BeautifulSoup
 
+def validate_account(username, token):
+    url = 'https://open.kattis.com/login'
+    login_args = {'user': username, 'script': 'true', 'token':token}
+    with requests.session() as s:
+        try:
+            status = s.post(url, login_args)
+            if status.status_code != 200:
+                return status.status_code
+            return 200
+        except Exception as e:
+            print('Error!!!', e)
+            return 500
+
 def collect(username, token):
     url = 'https://open.kattis.com/login'
     login_args = {'user': username, 'script': 'true', 'token':token}
@@ -84,3 +97,4 @@ def delete_data():
     c = conn.cursor()
     c.execute('DELETE FROM userprofile;')
     conn.commit()
+    conn.close()
