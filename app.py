@@ -49,11 +49,7 @@ def login():
         username = request.form.get('accountOptions')
         userinfo = get_userinfo(username)
         status = collect(userinfo['username'], userinfo['token'])
-
-        if status != 200:
-            return render_template('login.html', usernames = usernames, input_error = True)
         return redirect(url_for('user', username = username))
-
     return render_template('login.html', input_error = False, usernames = usernames)
 
 # NOTE: not many accounts so rendering the whole page is fine. TODO: just update the user dropdown menu
@@ -65,7 +61,7 @@ def account():
         status = validate_account(username, token)
 
         if status != 200:
-            return render_template('login.html', usernames = usernames, input_error = True)
+            return render_template('login.html', usernames = usernames, username = username, token = token, input_error = True)
 
         store_userinfo(username, token)
         usernames = get_usernames()
