@@ -1,9 +1,8 @@
 .month {
 	width: 230px;
 	padding: 5px;
-	background: var(--dark-black);
-	border-color: var(--greyish);
-	border-style: solid;
+	background: var(--white);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	position: relative;
 	overflow: hidden;
 	float: left;
@@ -15,10 +14,8 @@
 	text-align: center;
 	margin: -20px -20px 10px -20px;
 	padding: 20px 0px 5px 0px;
-	background: var(--calendar-month-background);
-	border-color: var(--greyish);
-	border-style: solid;
-	color: var(--calendar-month);
+	background: var(--black);
+	color: var(--white);
 	font-size: 15px;
 }
 
@@ -38,7 +35,7 @@
 
 .day {
 	cursor: pointer;
-	color: var(--calendar-day);
+	color: var(--black);
 	font-size: 15px;
 }
 
@@ -47,7 +44,7 @@
 }
 
 .day:hover {
-	background: var(--calendar-day-hover) !important;
+	background: var(--whiteish) !important;
 }
 
 .day, .dummy-day {
@@ -57,7 +54,7 @@
 }
 
 .dummy-day {
-	color: var(--calendar-dummyday);
+	color: var(--grey);
 	font-size: 15px;
 }
 

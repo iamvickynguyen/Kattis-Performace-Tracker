@@ -88,8 +88,8 @@ fetch(`/api/statuscountgroupbydate?user=${username}`)
                 s +=  e.tle_count != null ? "TLE: " + e.tle_count + " " : "";
                 s +=  e.others_count != null ? "Others: " + e.others_count + " " : "";
                 
-                let dateColor = "#4e5b83";
-                const colors = ["#c0c6da", "#919cbf", "#818eb6", "#6272a4", "#4e5b83"];
+                let dateColor = "#05BB33";
+                const colors = ["#C2FDD1", "#76FB98", "#3DF96D", "#07F543", "#05BB33"];
                 for (let i = 1; i <= 5; i++) {
                     if (e.submissions <= submissionUnit * i) {
                         dateColor = colors[i - 1];
