@@ -7,9 +7,15 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    {% block head %}{% endblock %}
+    <link rel= "stylesheet" type= "text/css" href= "../static/style.css">
+    {% block head %}
+    {% endblock %}
 </head>
 <body>
-    {% block body %}{% endblock %}
+    <div class="title-bar">
+        <h4>Kattis Performance Tracker</h4>
+    </div>
+    {% block body %}
+    {% endblock %}
 </body>
 </html>

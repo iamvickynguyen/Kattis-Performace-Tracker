@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block head %}
-<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='style.css') }}">
 {% endblock %}
 {% block body %}
 
@@ -33,13 +32,14 @@
         </div>
     </div>
 
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-wrap="false" data-interval="false">
+    <a href="{{ url_for('login') }}"><button class="btn user-btn"><i class="fa fa-user"></i> Switch User</button></a>
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-wrap="false" data-interval="false">   
         <div class="carousel-inner" id="carousel-container"></div>
         <a class="carousel-control-prev carousel-top-control carousel-control-left" href="#carouselExampleControls" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="carousel-control-prev-icon carousel-icon-color" aria-hidden="true"></span>
         </a>
         <a class="carousel-control-next carousel-top-control carousel-control-right" href="#carouselExampleControls" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="carousel-control-next-icon carousel-icon-color" aria-hidden="true"></span>
         </a>
     </div>
 
