@@ -96,13 +96,16 @@ def api_statuscountgroupbydate():
             from tle left join ac_wa on ac_wa.date = tle.date
             where ac_wa.date is null),
         others as
-        (select count(status) as others_count, date from usertable where date not in (select date from ac_wa_tle) and date is not null group by date)
-        select ac_count, wa_count, tle_count, others_count, ac_wa_tle.date
+        (select count(status) as others_count, date from usertable where date not in (select date from ac_wa_tle) and date is not null group by date),
+        uniontable as
+		(select ac_count, wa_count, tle_count, others_count, ac_wa_tle.date
             from ac_wa_tle left join others on ac_wa_tle.date = others.date
             union
             select ac_count, wa_count, tle_count, others_count, others.date
             from others left join ac_wa_tle on ac_wa_tle.date = others.date
-            where ac_wa_tle.date is null;'''.format(username)
+            where ac_wa_tle.date is null)
+		select ac_count, wa_count, tle_count, others_count, (IFNULL(ac_count, 0) + IFNULL(wa_count, 0) + IFNULL(tle_count, 0) + IFNULL(others_count, 0)) as submissions, date
+		from uniontable;'''.format(username)
 
     results = c.execute(query).fetchall()
     return jsonify({'results': results})

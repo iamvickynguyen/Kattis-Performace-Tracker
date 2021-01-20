@@ -1,18 +1,23 @@
 :root {
-    --main-background: #EAB996;
-    --calendar-background: #FCFDFB;
-    --calendar-day: #020102;
-    --calendar-day-hover: #F1ECE4;
-    --calendar-dummyday: #cea99d;
+    --dark-black:#282a36;
+    --greyish:  #44475a;
+    --dark-blue: #6272a4;
+    --calendar-day: #f8f8f2;
+    --calendar-day-hover: #cacaca;
+    --calendar-dummyday: #888dac;
     --calendar-day-selected: #ABDF9D;
-    --calendar-month:  #FCFDFB;
-    --calendar-month-background: #020102;
+    --calendar-month: #ff79c6;
+    --calendar-month-background: #282a36;
 }
 
 html, body {
-	background: var(--main-background);
+	background: var(--dark-black);
     font-family: sans-serif;
     height: 100vh;
+}
+
+h1 {
+    color: var(--calendar-day);
 }
 
 .container {

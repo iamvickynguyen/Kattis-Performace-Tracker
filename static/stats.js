@@ -66,7 +66,6 @@ fetch(`/api/statuscountgroupbydate?user=${username}`)
     .then(function(data) { 
         years = {};
         data.results.forEach(function(item) { years[item.date.substring(0, 4)] = true; });
-        //clearChildren(carouselContainer);
 
         for (const y in years) {
             createCarouselSlide(carouselContainer, y);
@@ -82,16 +81,26 @@ fetch(`/api/statuscountgroupbydate?user=${username}`)
             const minDate = new Date(Math.min.apply(null, allDates));
     
             let dateDict = {};
+            const submissionUnit = Math.max.apply(null, statuscountgroupbydate.map(function(s) { return s.submissions; })) / 5;
             statuscountgroupbydate.forEach(function(e) {
                 let s = e.ac_count != null ? "AC: " + e.ac_count + " " : "";
                 s +=  e.wa_count != null ? "WA: " + e.wa_count + " " : "";
                 s +=  e.tle_count != null ? "TLE: " + e.tle_count + " " : "";
                 s +=  e.others_count != null ? "Others: " + e.others_count + " " : "";
-                dateDict[e.date] = s.trim(); 
+                
+                let dateColor = "#4e5b83";
+                const colors = ["#c0c6da", "#919cbf", "#818eb6", "#6272a4", "#4e5b83"];
+                for (let i = 1; i <= 5; i++) {
+                    if (e.submissions <= submissionUnit * i) {
+                        dateColor = colors[i - 1];
+                        break;
+                    }
+                }
+                dateDict[e.date] = {"title": s.trim(), "color": dateColor}; 
             });
     
             let calendar = document.getElementById(`user-calendar-${y}`);
-            calendarize.buildMonthsWithStartAndEndDates(calendar, {'color': '#FFA384', 'selectedDates': selectedDates, 'tooltip': dateDict}, minDate, maxDate, getDetailData);
+            calendarize.buildMonthsWithStartAndEndDates(calendar, {'selectedDates': selectedDates, 'dateInfo': dateDict}, minDate, maxDate, getDetailData);
         }
 
         // set current year active

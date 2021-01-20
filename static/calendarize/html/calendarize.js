@@ -100,7 +100,7 @@ function Calendarize() {
 				},
 				color: opts.color || "#fff",
 				selectedDates: opts.selectedDates || {},
-				tooltip: opts.tooltip || {}
+				dateInfo: opts.dateInfo || {}
 			};
 
 			months.forEach(function(a, b) {
@@ -227,8 +227,10 @@ function Calendarize() {
 		
 					$dayNode.style.backgroundColor = opts.color || "fff";
 
-					if (opts.tooltip && Object.keys(opts.tooltip).length > 0)
-						$dayNode.setAttribute("title", opts.tooltip[dateFormat]);
+					if (opts.dateInfo && Object.keys(opts.dateInfo).length > 0) {
+						$dayNode.setAttribute("title", opts.dateInfo[dateFormat].title);
+						$dayNode.style.backgroundColor = opts.dateInfo[dateFormat].color;
+					}			
 				}
 				
 				$monthNode.appendChild($dayNode);

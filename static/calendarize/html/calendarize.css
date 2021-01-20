@@ -1,7 +1,9 @@
 .month {
 	width: 230px;
 	padding: 5px;
-	background: var(--calendar-background);
+	background: var(--dark-black);
+	border-color: var(--greyish);
+	border-style: solid;
 	position: relative;
 	overflow: hidden;
 	float: left;
@@ -14,6 +16,8 @@
 	margin: -20px -20px 10px -20px;
 	padding: 20px 0px 5px 0px;
 	background: var(--calendar-month-background);
+	border-color: var(--greyish);
+	border-style: solid;
 	color: var(--calendar-month);
 	font-size: 15px;
 }
