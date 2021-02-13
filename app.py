@@ -1,29 +1,30 @@
 import sqlite3
 import os
 from flask import Flask, render_template, request, url_for, jsonify, redirect
-from collector import validate_account, collect, delete_data
+from collector import validate_account, collect
 app = Flask(__name__)
 
-# data table
 conn = sqlite3.connect('kattistracker.db')
 c = conn.cursor()
+
+# users table
+c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='accounts';''')
+
+#if the count is 1, then table exists
+if c.fetchone()[0]!=1 :
+    c.execute('''CREATE TABLE IF NOT EXISTS accounts (userid text primary key, token text unique);''')
+conn.commit()
+
+# data table
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='userprofile' ''')
 
 #if the count is 1, then table exists
 if c.fetchone()[0]!=1 :
     c.execute('''CREATE TABLE IF NOT EXISTS userprofile
-        (id text, user text, date text, time text, problem text, status text, cpu real, lang text)''')
-conn.commit()
-conn.close()
-
-# users table
-conn = sqlite3.connect('users.db')
-c = conn.cursor()
-c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='accounts';''')
-
-#if the count is 1, then table exists
-if c.fetchone()[0]!=1 :
-    c.execute('''CREATE TABLE IF NOT EXISTS accounts (username text primary key, token text unique);''')
+        (id text, userid text, date text, time text, problem text, status text, cpu real, lang text,
+        FOREIGN KEY (userid)
+        REFERENCES accounts(userid)
+        ON DELETE CASCADE)''')
 conn.commit()
 conn.close()
 
@@ -34,25 +35,46 @@ def dict_factory(cursor, row):
     return d
 
 def store_userinfo(username, token):     
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect('kattistracker.db')
     c = conn.cursor()
-    results = c.execute('''select username from accounts where username='%s';''' % username).fetchone()
+    results = c.execute('''select userid from accounts where userid='%s';''' % username).fetchone()
     if not results:
-        c.execute('''insert into accounts(username, token) values('%s', '%s');''' % (username, token))
+        c.execute('''insert into accounts(userid, token) values('%s', '%s');''' % (username, token))
         conn.commit()
     conn.close()
 
+def delete_user(username):
+    conn = sqlite3.connect('kattistracker.db')
+    c = conn.cursor()
+    c.execute("PRAGMA foreign_keys=ON")
+    c.execute('''delete from accounts where userid='%s';''' % username)
+    conn.commit()
+    conn.close()
+
+def get_userinfo(username):
+    conn = sqlite3.connect('kattistracker.db')
+    conn.row_factory = dict_factory
+    c = conn.cursor()
+    return c.execute('''select * from accounts where userid='%s';''' %username).fetchone()
+
+def get_usernames():
+    conn = sqlite3.connect('kattistracker.db')
+    conn.row_factory = dict_factory
+    c = conn.cursor()
+    return list(map(lambda x: x['userid'], c.execute('''select userid from accounts;''').fetchall()))
+
 @app.route('/', methods=['POST', 'GET'])
 def login():
-    usernames = get_usernames()
     if request.method == 'POST':
-        if request.form.get('submitBtn') == 'submitName':
+        if request.form.get('submitBtn') == 'submitBtn':
             username = request.form.get('accountOptions')
             userinfo = get_userinfo(username)
-            status = collect(userinfo['username'], userinfo['token'])
+            status = collect(userinfo['userid'], userinfo['token'])
             return redirect(url_for('user', username = username))
-        else:
-            pass
+        elif request.form.get('removeBtn') == 'removeBtn':
+            username = request.form.get('accountOptions')
+            delete_user(username)
+    usernames = get_usernames()
     return render_template('login.html', input_error = False, usernames = usernames)
 
 # NOTE: not many accounts so rendering the whole page is fine. TODO: just update the user dropdown menu
@@ -80,7 +102,7 @@ def api_statuscountgroupbydate():
     conn.row_factory = dict_factory
     c = conn.cursor()
     username = request.args.get('user')
-    query = '''with usertable as (select * from userprofile where user='{0}'),
+    query = '''with usertable as (select * from userprofile where userid='{0}'),
         ac as (select count(status) as ac_count, date from usertable where status LIKE 'Accepted%' COLLATE NOCASE and date is not null group by date),
         wa as (select count(status) as wa_count, date from usertable where status LIKE 'Wrong Answer%' COLLATE NOCASE and date is not null group by date),
         tle as (select count(status) as tle_count, date from usertable where status LIKE 'Time Limit Exceeded%' COLLATE NOCASE and date is not null group by date),
@@ -118,20 +140,8 @@ def api_details():
     conn = sqlite3.connect('kattistracker.db')
     conn.row_factory = dict_factory
     c = conn.cursor()
-    results = c.execute('''select * from userprofile where user='%s' and date='%s' order by time;''' %(request.args.get('user'), request.args.get('date'))).fetchall()
+    results = c.execute('''select * from userprofile where userid='%s' and date='%s' order by time;''' %(request.args.get('user'), request.args.get('date'))).fetchall()
     return jsonify({'results': results})
-
-def get_userinfo(username):
-    conn = sqlite3.connect('users.db')
-    conn.row_factory = dict_factory
-    c = conn.cursor()
-    return c.execute('''select * from accounts where username='%s';''' %username).fetchone()
-
-def get_usernames():
-    conn = sqlite3.connect('users.db')
-    conn.row_factory = dict_factory
-    c = conn.cursor()
-    return list(map(lambda x: x['username'], c.execute('''select username from accounts;''').fetchall()))
 
 if __name__ == "__main__":
     app.run(debug=True)

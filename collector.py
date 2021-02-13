@@ -56,7 +56,7 @@ def collect(username, token):
                         break
                     newtuples.append(item)
 
-                c.executemany('INSERT INTO userprofile(id, user, date, time, problem, status, cpu, lang) values (?,?,?,?,?,?,?,?)', newtuples)
+                c.executemany('INSERT INTO userprofile(id, userid, date, time, problem, status, cpu, lang) values (?,?,?,?,?,?,?,?)', newtuples)
 
                 if endscrapping:
                     break
@@ -91,10 +91,3 @@ def get_data(table, username):
             cols[5].get_text()
         ))
     return data
-
-def delete_data():
-    conn = sqlite3.connect('kattistracker.db')
-    c = conn.cursor()
-    c.execute('DELETE FROM userprofile;')
-    conn.commit()
-    conn.close()
