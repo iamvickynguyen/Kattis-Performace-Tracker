@@ -46,10 +46,13 @@ def store_userinfo(username, token):
 def login():
     usernames = get_usernames()
     if request.method == 'POST':
-        username = request.form.get('accountOptions')
-        userinfo = get_userinfo(username)
-        status = collect(userinfo['username'], userinfo['token'])
-        return redirect(url_for('user', username = username))
+        if request.form.get('submitBtn') == 'submitName':
+            username = request.form.get('accountOptions')
+            userinfo = get_userinfo(username)
+            status = collect(userinfo['username'], userinfo['token'])
+            return redirect(url_for('user', username = username))
+        else:
+            pass
     return render_template('login.html', input_error = False, usernames = usernames)
 
 # NOTE: not many accounts so rendering the whole page is fine. TODO: just update the user dropdown menu
@@ -131,4 +134,4 @@ def get_usernames():
     return list(map(lambda x: x['username'], c.execute('''select username from accounts;''').fetchall()))
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

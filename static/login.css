@@ -33,13 +33,18 @@ p {
     background: #ffbdb6;
 }
 
-.loginBtn {
-    display: block;
-    margin: 0 auto;
-    margin-top: 15px;
+.formBtn {
+    margin: 1rem;
     font-size: 1.6em;
 }
 
 .center {
     text-align: center;
+}
+
+.button-group {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
