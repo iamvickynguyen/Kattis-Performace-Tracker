@@ -103,9 +103,14 @@ def api_statuscountgroupbydate():
     c = conn.cursor()
     username = request.args.get('user')
     query = '''with usertable as (select * from userprofile where userid='{0}'),
-        ac as (select count(status) as ac_count, date from usertable where status LIKE 'Accepted%' COLLATE NOCASE and date is not null group by date),
-        wa as (select count(status) as wa_count, date from usertable where status LIKE 'Wrong Answer%' COLLATE NOCASE and date is not null group by date),
-        tle as (select count(status) as tle_count, date from usertable where status LIKE 'Time Limit Exceeded%' COLLATE NOCASE and date is not null group by date),
+        ac as (select count(status) as ac_count, date from usertable where status LIKE 'Accepted%' COLLATE NOCASE and date IS NOT NULL GROUP BY date),
+        wa as (select count(status) as wa_count, date from usertable where status LIKE 'Wrong Answer%' COLLATE NOCASE and date IS NOT NULL GROUP BY date),
+        tle as (select count(status) as tle_count, date from usertable where status LIKE 'Time Limit Exceeded%' COLLATE NOCASE and date IS NOT NULL GROUP BY date),
+		others as (select count(status) as other_count, date from usertable where
+			status NOT LIKE 'Time Limit Exceeded%' COLLATE NOCASE
+			AND status NOT LIKE 'Accepted%' COLLATE NOCASE
+			AND status NOT LIKE 'Wrong Answer%' COLLATE NOCASE
+			AND date IS NOT NULL GROUP BY date),
         ac_wa as
         (select ac_count, wa_count, ac.date
             from ac left join wa on ac.date = wa.date
@@ -120,17 +125,15 @@ def api_statuscountgroupbydate():
             select ac_count, wa_count, tle_count, tle.date
             from tle left join ac_wa on ac_wa.date = tle.date
             where ac_wa.date is null),
-        others as
-        (select count(status) as others_count, date from usertable where date not in (select date from ac_wa_tle) and date is not null group by date),
-        uniontable as
-		(select ac_count, wa_count, tle_count, others_count, ac_wa_tle.date
+		ac_wa_tle_others as
+        (select ac_count, wa_count, tle_count, other_count, ac_wa_tle.date
             from ac_wa_tle left join others on ac_wa_tle.date = others.date
             union
-            select ac_count, wa_count, tle_count, others_count, others.date
+            select ac_count, wa_count, tle_count, other_count, others.date
             from others left join ac_wa_tle on ac_wa_tle.date = others.date
             where ac_wa_tle.date is null)
-		select ac_count, wa_count, tle_count, others_count, (IFNULL(ac_count, 0) + IFNULL(wa_count, 0) + IFNULL(tle_count, 0) + IFNULL(others_count, 0)) as submissions, date
-		from uniontable;'''.format(username)
+		select ac_count, wa_count, tle_count, other_count, (IFNULL(ac_count, 0) + IFNULL(wa_count, 0) + IFNULL(tle_count, 0) + IFNULL(other_count, 0)) as submissions, date
+		from ac_wa_tle_others;'''.format(username)
 
     results = c.execute(query).fetchall()
     return jsonify({'results': results})

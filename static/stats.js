@@ -86,7 +86,7 @@ fetch(`/api/statuscountgroupbydate?user=${username}`)
                 let s = e.ac_count != null ? "AC: " + e.ac_count + " " : "";
                 s +=  e.wa_count != null ? "WA: " + e.wa_count + " " : "";
                 s +=  e.tle_count != null ? "TLE: " + e.tle_count + " " : "";
-                s +=  e.others_count != null ? "Others: " + e.others_count + " " : "";
+                s +=  e.other_count != null ? "Others: " + e.other_count + " " : "";
                 
                 let dateColor = "#05BB33";
                 const colors = ["#C2FDD1", "#76FB98", "#3DF96D", "#07F543", "#05BB33"];
