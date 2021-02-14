@@ -1,0 +1,60 @@
+.month {
+	width: 230px;
+	padding: 5px;
+	background: var(--white);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	position: relative;
+	overflow: hidden;
+	float: left;
+	margin: 10px 20px 10px 20px;
+	height: 220px;
+}
+
+.month h6 {
+	text-align: center;
+	margin: -20px -20px 10px -20px;
+	padding: 20px 0px 5px 0px;
+	background: var(--black);
+	color: var(--white);
+	font-size: 15px;
+}
+
+.day, .dow, .dummy-day {
+	display: inline-block;
+	width: 12.7864%;
+	float: left;
+	text-align: center;
+	margin-right: 1.5%;
+	font-size: 15px;
+}
+
+.dow {
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.day {
+	cursor: pointer;
+	color: var(--black);
+	font-size: 15px;
+}
+
+.day.weekend {
+	/* background: rgb(245, 171, 53); */
+}
+
+.day:hover {
+	background: var(--whiteish) !important;
+}
+
+.day, .dummy-day {
+	height: 20px;
+	line-height: 20px;
+	margin-bottom: 1.5%;
+}
+
+.dummy-day {
+	color: var(--grey);
+	font-size: 15px;
+}
+

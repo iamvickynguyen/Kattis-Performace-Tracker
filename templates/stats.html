@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block head %}
+{% endblock %}
+{% block body %}
+
+    <!-- Modal -->
+    <button type="button" id="modalBtn" data-toggle="modal" data-target="#detailDateModalCenter" style="display: none;"></button>
+    <div class="modal fade" id="detailDateModalCenter" tabindex="-1" role="dialog" >
+        <div class="modal-dialog modal-dialog-centered modal-lrg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailDateModal"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Problem</th>
+                                <th scope="col">Time</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">CPU</th>
+                                <th scope="col">Language</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalTableRows"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="{{ url_for('login') }}"><button class="btn user-btn"><i class="fa fa-user"></i> Switch User</button></a>
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-wrap="false" data-interval="false">   
+        <div class="carousel-inner" id="carousel-container"></div>
+        <a class="carousel-control-prev carousel-top-control carousel-control-left" href="#carouselExampleControls" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon carousel-icon-color" aria-hidden="true"></span>
+        </a>
+        <a class="carousel-control-next carousel-top-control carousel-control-right" href="#carouselExampleControls" role="button" data-slide="next">
+            <span class="carousel-control-next-icon carousel-icon-color" aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <link rel="stylesheet" href="static/calendarize/html/calendarize.css">
+    <script type="text/javascript" src="static/calendarize/html/calendarize.js"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='stats.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+{% endblock %}

@@ -1,0 +1,74 @@
+:root {
+    --black: #000000;
+    --orange: #FF9900;
+    --green:#50fa7b;
+    --white: #ffffff;
+    --whiteish: #f2f2f2;
+    --grey: #cbcbcb;
+}
+
+html, body {
+	background: var(--white);
+    font-family: sans-serif;
+    height: 100vh;
+}
+
+h1 {
+    color: var(--black);
+}
+
+.title-bar {
+    position: relative;
+    width: 100%;
+    height: 3rem;
+    margin-top: 0;
+    background: var(--black);
+    padding: 0.6rem 1rem;
+    color: var(--white);
+    text-align: center;
+}
+
+.user-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0.3rem;
+    background: var(--green);
+}
+
+.container {
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-lrg {
+    max-width: 80%;
+}
+
+.modal-body {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.carousel-top-control {
+    top: 5rem;
+    position: fixed;
+    width: 15%;
+    height: 15px;
+}
+
+.carousel-control-left {
+    margin-left: 25%;
+    filter: invert(50%);
+}
+
+.carousel-control-right {
+    margin-right: 25%;
+    filter: invert(50%);
+}
+
+.calendar-title {
+    text-align: center;
+    padding: 20px;
+}

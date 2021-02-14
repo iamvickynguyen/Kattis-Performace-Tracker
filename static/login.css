@@ -1,0 +1,50 @@
+body {
+    font-size: 15px
+}
+
+form, .output {
+    background: var(--white);
+    padding: 3em 3em 2em;
+    max-width: 50%;
+    margin: 100px auto 0;
+    box-shadow: 0 0 1em #222;
+    border-radius: 5px;
+}
+
+p {
+    margin: 0 0 1em 0;
+    position: relative;
+}
+
+.InputLabel {
+    display: block;
+    font-size: 1.6em;
+    margin: 0 0 .5em;
+    color: var(--black);
+}
+.userInput {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    outline: none;
+}
+
+.errorInput {
+    background: #ffbdb6;
+}
+
+.formBtn {
+    margin: 1rem;
+    font-size: 1.6em;
+}
+
+.center {
+    text-align: center;
+}
+
+.button-group {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
