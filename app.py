@@ -1,5 +1,7 @@
 import sqlite3
 import os
+import webbrowser
+from threading import Timer
 from flask import Flask, render_template, request, url_for, jsonify, redirect
 from collector import validate_account, collect
 app = Flask(__name__)
@@ -146,5 +148,9 @@ def api_details():
     results = c.execute('''select * from userprofile where userid='%s' and date='%s' order by time;''' %(request.args.get('user'), request.args.get('date'))).fetchall()
     return jsonify({'results': results})
 
+def open_browser():
+    webbrowser.open_new_tab('http://127.0.0.1:5000/')
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    Timer(1, open_browser).start();
+    app.run(debug=False)
