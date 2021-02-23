@@ -79,7 +79,7 @@ def login():
     usernames = get_usernames()
     return render_template('login.html', input_error = False, usernames = usernames)
 
-# NOTE: not many accounts so rendering the whole page is fine. TODO: just update the user dropdown menu
+# NOTE: not many accounts so rendering the whole page is fine.
 @app.route('/account', methods=['POST', 'GET'])
 def account():
     if request.method == 'POST':
